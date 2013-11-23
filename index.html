@@ -1,14 +1,12 @@
 
-<!-----------------------------------------------------
+<!--
 sleepyti.me bedtime calculator
 Author: David Shaw (dshaw dot jobs at gmail dot com)
 URL: http://github.com/davidshaw/sleepyti.me/
------------------------------------------------------->
+-->
+
 <html>
 <head>
-<script>document.write('<script src="http://' + (location.host || 'localhost')
-.split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-
 <title>sleepyti.me bedtime calculator</title>
 <META NAME="Description" CONTENT="Sleepyti.me is a bedtime calculator that can help you calculate when to fall asleep. By counting backwards in sleep cycles, sleepyti.me has the ability to help you wake up refreshed, instead of feeling groggy. Sleepyti.me can also help you figure out what time to set your alarm if you are going to sleep at that moment.">
 <META NAME="Keywords" CONTENT="sleep, refreshed, sleeping, health, bedtime, bed, bed time, calculator, ajax, javascript">
@@ -19,8 +17,29 @@ URL: http://github.com/davidshaw/sleepyti.me/
 <meta property="og:image" content="http://sleepyti.me/favicon.ico" />
 <meta property="og:site_name" content="sleepyti.me" />
 <meta property="fb:admins" content="1042020040" />
+<style type="text/css">
+body {
+	max-width: 100%;
+	/*background-color: #FFFF00;*/
+}
+</style>
 <script src="jquery.js"></script>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<script>document.write('<script src="http://' + (location.host || 'localhost')
+.split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 <script>
+(function ($) {
+    $.isIPhone = function () {
+    	// return 1;
+        return (typeof navigator != "undefined" &&
+           navigator && navigator.userAgent &&
+           (navigator.userAgent.match(/iPhone/i) != null ||
+            navigator.userAgent.match(/iPod/i) != null));    
+    };
+})(jQuery);
+
+// if($.isIPhone())
+	// alert('Hello, iPhone');
 $(document).ready(function() {
 	function ren() {
 		// render the page in case you're wondering, 
@@ -48,8 +67,7 @@ $(document).ready(function() {
 			}
 			else {
 				mrend = mrend + '<option>' + m + '</option>';
-			}
-			
+			}			
 		}
 		
 		mrend = mrend + '</select></td><td><select id="ampm">' + 
@@ -60,7 +78,16 @@ $(document).ready(function() {
 		'<td></td></span>' +
 		'<td></tr><tr><span class="results" style="display:none;"></span></td>' + 
 		'</tr></table>';
-		$('#main').html(mrend);
+		if ($.isIPhone()) {
+			$("#main").html('<center><div>I need to wake up at <input type="time" name="time" id="time"></input><button id="calc">calculate</button></div>' + 
+'<tr valign=TOP><td></td><td align="center"><span id="nowtop"><hr color="white" width="25%"><big><font color="#666666"><i>or, find out when to wake up<br/>if you go to bed now</i></font></big></td><td align="center"><hr color="white" width="25%"><input type="button" value="zzz" id="sleepnow"/></span></td>' +
+		'<td></td></span>' +
+		'<td></tr><tr><span class="results" style="display:none;"></span></td>' + 
+		'</tr></table>');
+		}
+		else {
+			$('#main').html(mrend);
+		}
 	}
 	ren();
 	
@@ -227,6 +254,21 @@ $(document).ready(function() {
 		var hr = $("#hour").val();
 		var min = $("#minute").val();
 		var orig = [hr, min, ampm];
+
+		if ($.isIPhone()) {
+			v = $("#time")[0].value;
+			p = v.split(':');
+			hr = p[0];
+			min = p[1];
+			if (hr > 12) {
+				ampm = "PM";
+			}
+			else {
+				ampm = "AM";
+			}
+			hr = hr % 12;
+			orig = [hr, min, ampm]; 
+		}
 		
 		if(hr == 12) {
 			if(ampm == "AM") {
@@ -342,6 +384,7 @@ $(document).ready(function() {
 
 </div>
 <div id="fb">
+<!--
 <hr color="white">
 <hr color="white">
 <hr color="white">
